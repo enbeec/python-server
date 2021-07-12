@@ -1,8 +1,6 @@
 {
-	"python.linting.pylintEnabled": true,
-	"python.linting.enabled": true,
-	"cSpell.words": [
-		"rfile",
-		"wfile"
-	]
+  "editor.formatOnSave": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "cSpell.words": []
 }

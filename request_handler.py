@@ -1,5 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from animals import get_all_animals, get_single_animal
+from employees import get_all_employees, get_single_employee
+from locations import get_all_locations, get_single_location
+
 
 # this sets up inheritance
 class HandleRequests(BaseHTTPRequestHandler):
@@ -18,7 +21,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         # path_params[0] is the empty string before the first slash
         resource = path_params[1]
         id = None
-
 
         try:
             # if we have a path_params[2] that is int'able, this will succeed
@@ -68,6 +70,16 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = f"{get_single_animal(id)}"
             else:
                 response = f"{get_all_animals()}"
+        elif resource == "employees":
+            if id is not None:
+                response = f"{get_single_employee(id)}"
+            else:
+                response = f"{get_all_employees()}"
+        elif resource == "locations":
+            if id is not None:
+                response = f"{get_single_location(id)}"
+            else:
+                response = f"{get_all_locations()}"
 
         self.wfile.write(f"{response}".encode())
 

@@ -1,3 +1,5 @@
+from json import dumps
+
 ANIMALS = [{
     "id": 1,
     "name": "Snickers",
@@ -23,11 +25,13 @@ ANIMALS = [{
 
 
 def get_all_animals():
-    """get_all_animals returns the entire ANIMALS list"""
-    return ANIMALS
+    """Returns the entire ANIMALS list as a json string.
+    """
+    return dumps(ANIMALS)
+
 
 def get_single_animal(id):
-    """get_single_animal finds a single animal in ANIMALS using an id
+    """Finds a single animal in ANIMALS using an integer id and returns it as a json string.
 
     Args:
         id (int): the integer id we are looking for in ANIMALS
@@ -40,4 +44,4 @@ def get_single_animal(id):
     for animal in ANIMALS:
         if animal["id"] == id:
             requested_animal = animal
-    return requested_animal
+    return dumps(requested_animal)

@@ -1,17 +1,51 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=733558
-	// for the documentation about the tasks.json format
-	"version": "2.0.0",
-	"tasks": [
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  /*
+	I have this inside my keybindings:
 		{
-			"label": "get animals",
-			"type": "shell",
-			"command": "curl -sXGET localhost:8088/animals"
+			"key": "ctrl+F1",
+			"command": "workbench.action.tasks.runTask",
+			"args": "get first resource"
 		},
 		{
-			"label": "get animal 1",
-			"type": "shell",
-			"command": "curl -sXGET localhost:8088/animals/1"
-		}
-	]
+			"key": "ctrl+shift+F1",
+			"command": "workbench.action.tasks.runTask",
+			"args": "get first resource, single"
+		}...
+	This allows per-workspace tasks with shortcuts, albeit in a hacky way
+	*/
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "get first resource",
+      "type": "shell",
+      "command": "curl -sXGET localhost:8088/animals | jq '.'"
+    },
+    {
+      "label": "get first resource, single",
+      "type": "shell",
+      "command": "curl -sXGET localhost:8088/animals/1 | jq '.'"
+    },
+    {
+      "label": "get second resource",
+      "type": "shell",
+      "command": "curl -sXGET localhost:8088/employees | jq '.'"
+    },
+    {
+      "label": "get second resource, single",
+      "type": "shell",
+      "command": "curl -sXGET localhost:8088/employees/1 | jq '.'"
+    }
+    {
+      "label": "get third resource",
+      "type": "shell",
+      "command": "curl -sXGET localhost:8088/locations | jq '.'"
+    },
+    {
+      "label": "get third resource, single",
+      "type": "shell",
+      "command": "curl -sXGET localhost:8088/locations/1 | jq '.'"
+    },
+  ]
 }
