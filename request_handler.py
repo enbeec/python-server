@@ -6,7 +6,8 @@ from locations import get_all_locations, get_single_location
 
 # this sets up inheritance
 class HandleRequests(BaseHTTPRequestHandler):
-    """HandleRequests is a custom HTTP request handler"""
+    """HandleRequests is a custom HTTP request handler
+    """
 
     def parse_url(self, path):
         """parse_url separates the path portion of the given url
