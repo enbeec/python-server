@@ -37,3 +37,21 @@ def get_single_location(id):
         if location["id"] == id:
             requested_location = location
     return requested_location
+
+
+def post_single_location(location):
+    """Takes a location, adds it to LOCATIONS and returns it with it's shiny new id
+
+    Args:
+        location (dict): the location item
+
+    Returns:
+        dict: the location item with it's id in LOCATIONS
+    """
+    # Reverse index the LOCATIONS to get the highest id
+    max_id = LOCATIONS[-1]["id"]
+
+    new_id = max_id + 1
+    location["id"] = new_id
+    LOCATIONS.append(location)
+    return location

@@ -2,60 +2,70 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from animals import get_all_animals, get_single_animal
 from employees import get_all_employees, get_single_employee
-from locations import get_all_locations, get_single_location
+from locations import get_all_locations, get_single_location, post_single_location
 
 
-class Get:
-    """Wraps get functions in a more easily callable way.
+class Resources:
+    """Wraps resource functions in a more easily callable way.
         """
 
-    def resources(self):
+    def __call__(self):
         """Returns a list of available resources.
+
+            The __call__ method is called when you add () after an instance of Resources
             """
-        return self.getters.keys()
+        return self.funcDict.keys()
 
-    def single(self, resource, id):
-        """Exposes the single getter for a given resource.
+    def nothing(self):  # pylint: disable=missing-docstring
+        return f'{[]}'
 
-            Args:
-                resource (string): the resource to GET from
-                id (int): the id of the requested item
+    def get_single(self, resource, id):  # pylint: disable=missing-docstring
+        if resource in self.funcDict:
+            return self.funcDict[resource]["get"]["single"](id)
+        return self.nothing()
 
-            Returns:
-                dict: the requested single item from the given resource
-            """
-        if resource in self.getters:
-            return self.getters[resource]["single"](id)
-        else:
-            return f'{[]}'
+    def get_all(self, resource):  # pylint: disable=missing-docstring
+        if resource in self.funcDict:
+            return self.funcDict[resource]["get"]["all"]()
+        return self.nothing()
 
-    def all(self, resource):
-        """Exposes the getter for a given resource.
+    def post_item(self, resource, item):
+        """Posts a given item to the given resource
 
-            Args:
-                resource (string): the resource to GET from
+        Args:
+            resource (string): the name of the resource
+            item (dict): the item to be posted
 
-            Returns:
-                dict: the requested resource
-            """
-        if resource in self.getters:
-            return self.getters[resource]["all"]()
-        else:
-            return f'{[]}'
+        Returns:
+            dict: the item with its shiny new id
+        """
+        if resource in self.funcDict:
+            return self.funcDict[resource]["post"]["single"](item)
+        return self.nothing()
 
-    getters = {
+    funcDict = {
         "animals": {
-            "single": get_single_animal,
-            "all": get_all_animals
+            "get": {
+                "single": get_single_animal,
+                "all": get_all_animals
+            }
         },
         "employees": {
-            "single": get_single_employee,
-            "all": get_all_employees
+            "get": {
+                "single": get_single_employee,
+                "all": get_all_employees
+            }
         },
         "locations": {
-            "single": get_single_location,
-            "all": get_all_locations
+            "get": {
+                "single": get_single_location,
+                "all": get_all_locations
+            },
+            "post": {
+                "single": post_single_location
+            }
         },
+
     }
 
 
@@ -120,28 +130,38 @@ class HandleRequests(BaseHTTPRequestHandler):
         # ooh! tuple destructuring :)
         (resource, id) = self.parse_url(self.path)
 
-        # create an instance of our Get class
-        get = Get()
+        resources = Resources()
 
-        # and use it
-        if resource in get.resources():
+        if resource in resources():
             if id is not None:
-                response = get.single(resource, id)
+                response = resources.get_single(resource, id)
             else:
-                response = get.all(resource)
+                response = resources.get_all(resource)
 
-        self.wfile.write(f"{json.dumps(response)}".encode())
+        response = f"{json.dumps(response)}"
+        self.wfile.write(response.encode())
 
     def do_POST(self):
-        """do_POST responds to an POST request from the client
+        """do_POST responds to an POST request from the client.
+
+            All JSON <--> Python dict conversion happens inside here.
             """
         # Set response code to 'Created'
         self._set_headers(201)
-
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
-        response = f"received post request:<br>{post_body}"
-        self.wfile.write(response.encode())
+        post_body = json.loads(post_body)
+
+        (resource, _) = self.parse_url(self.path)
+        new_item = None
+
+        resources = Resources()
+
+        if resource in resources():
+            new_item = resources.post_item(resource, json.loads(post_body))
+
+        response = f"{json.dumps(new_item)}"
+        self.wfile.write(response.encode(response))
 
     def do_PUT(self):
         """do_POST responds to an POST request from the client... by just doing a PUT
