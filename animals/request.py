@@ -1,5 +1,3 @@
-from json import dumps
-
 ANIMALS = [{
     "id": 1,
     "name": "Snickers",
@@ -27,7 +25,7 @@ ANIMALS = [{
 def get_all_animals():
     """Returns the entire ANIMALS list as a json string.
     """
-    return dumps(ANIMALS)
+    return ANIMALS
 
 
 def get_single_animal(id):
@@ -44,4 +42,4 @@ def get_single_animal(id):
     for animal in ANIMALS:
         if animal["id"] == id:
             requested_animal = animal
-    return dumps(requested_animal)
+    return requested_animal

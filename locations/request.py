@@ -1,5 +1,3 @@
-from json import dumps
-
 LOCATIONS = [
     {
         "id": 1,
@@ -22,7 +20,7 @@ LOCATIONS = [
 def get_all_locations():
     """Returns the entire LOCATIONS list as a json string.
     """
-    return dumps(LOCATIONS)
+    return LOCATIONS
 
 
 def get_single_location(id):
@@ -38,4 +36,4 @@ def get_single_location(id):
     for location in LOCATIONS:
         if location["id"] == id:
             requested_location = location
-    return dumps(requested_location)
+    return requested_location

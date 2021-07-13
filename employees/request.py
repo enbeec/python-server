@@ -1,5 +1,3 @@
-from json import dumps
-
 EMPLOYEES = [
     {
         "id": 1,
@@ -22,7 +20,7 @@ EMPLOYEES = [
 def get_all_employees():
     """Returns the entire EMPLOYEES list as a json string.
     """
-    return dumps(EMPLOYEES)
+    return EMPLOYEES
 
 
 def get_single_employee(id):
@@ -38,4 +36,4 @@ def get_single_employee(id):
     for employee in EMPLOYEES:
         if employee["id"] == id:
             requested_employee = employee
-    return dumps(requested_employee)
+    return requested_employee
