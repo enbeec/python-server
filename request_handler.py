@@ -3,6 +3,7 @@ import json
 from animals import get_all_animals, get_single_animal, post_single_animal
 from employees import get_all_employees, get_single_employee, post_single_employee
 from locations import get_all_locations, get_single_location, post_single_location
+from customers import get_all_customers, get_single_customer, post_single_customer
 
 
 class Resources:
@@ -69,6 +70,15 @@ class Resources:
             },
             "post": {
                 "single": post_single_location
+            }
+        },
+        "customers": {
+            "get": {
+                "single": get_single_customer,
+                "all": get_all_customers
+            },
+            "post": {
+                "single": post_single_customer
             }
         },
 
