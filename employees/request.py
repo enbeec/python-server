@@ -37,3 +37,21 @@ def get_single_employee(id):
         if employee["id"] == id:
             requested_employee = employee
     return requested_employee
+
+
+def post_single_employee(employee):
+    """Takes a employee, adds it to LOCATIONS and returns it with it's shiny new id
+
+    Args:
+        employee (dict): the employee item
+
+    Returns:
+        dict: the employee item with it's id in LOCATIONS
+    """
+    # Reverse index the LOCATIONS to get the highest id
+    max_id = EMPLOYEES[-1]["id"]
+
+    new_id = max_id + 1
+    employee["id"] = new_id
+    EMPLOYEES.append(employee)
+    return employee

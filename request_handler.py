@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from animals import get_all_animals, get_single_animal
-from employees import get_all_employees, get_single_employee
+from animals import get_all_animals, get_single_animal, post_single_animal
+from employees import get_all_employees, get_single_employee, post_single_employee
 from locations import get_all_locations, get_single_location, post_single_location
 
 
@@ -48,12 +48,18 @@ class Resources:
             "get": {
                 "single": get_single_animal,
                 "all": get_all_animals
+            },
+            "post": {
+                "single": post_single_animal
             }
         },
         "employees": {
             "get": {
                 "single": get_single_employee,
                 "all": get_all_employees
+            },
+            "post": {
+                "single": post_single_employee
             }
         },
         "locations": {
@@ -158,10 +164,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         resources = Resources()
 
         if resource in resources():
-            new_item = resources.post_item(resource, json.loads(post_body))
+            new_item = resources.post_item(resource, post_body)
 
         response = f"{json.dumps(new_item)}"
-        self.wfile.write(response.encode(response))
+        self.wfile.write(response.encode())
 
     def do_PUT(self):
         """do_POST responds to an POST request from the client... by just doing a PUT
