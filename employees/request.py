@@ -55,3 +55,13 @@ def post_single_employee(employee):
     employee["id"] = new_id
     EMPLOYEES.append(employee)
     return employee
+
+
+def delete_single_employee(id):  # pylint: disable=missing-docstring
+    employees_index = -1
+    for index, employees in enumerate(CUSTOMERS):
+        if employees["id"] == id:
+            employees_index = index
+
+    if employees_index >= 0:
+        EMPLOYEES.pop(employees_index)

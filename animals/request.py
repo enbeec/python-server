@@ -61,3 +61,13 @@ def post_single_animal(animal):
     animal["id"] = new_id
     ANIMALS.append(animal)
     return animal
+
+
+def delete_single_animal(id):  # pylint: disable=missing-docstring
+    animals_index = -1
+    for index, animals in enumerate(CUSTOMERS):
+        if animals["id"] == id:
+            animals_index = index
+
+    if animals_index >= 0:
+        ANIMALS.pop(animals_index)

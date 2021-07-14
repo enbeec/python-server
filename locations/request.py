@@ -55,3 +55,13 @@ def post_single_location(location):
     location["id"] = new_id
     LOCATIONS.append(location)
     return location
+
+
+def delete_single_location(id):  # pylint: disable=missing-docstring
+    locations_index = -1
+    for index, locations in enumerate(CUSTOMERS):
+        if locations["id"] == id:
+            locations_index = index
+
+    if locations_index >= 0:
+        LOCATIONS.pop(locations_index)

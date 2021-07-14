@@ -22,21 +22,11 @@ CUSTOMERS = [
 ]
 
 
-def get_all_customers():
-    """Returns the entire CUSTOMERS list as a json string.
-    """
+def get_all_customers():  # pylint: disable=missing-docstring
     return CUSTOMERS
 
 
-def get_single_customer(id):
-    """Finds a single customer in CUSTOMERS using an integer id and returns it as a json string.
-
-    Args:
-        id (int): the integer id we are looking for in CUSTOMERS
-
-    Returns:
-        dict: the requested customer
-    """
+def get_single_customer(id):  # pylint: disable=missing-docstring
     # init an empty variable
     requested_customer = None
     for customer in CUSTOMERS:
@@ -45,15 +35,7 @@ def get_single_customer(id):
     return requested_customer
 
 
-def post_single_customer(customer):
-    """Takes a customer, adds it to CUSTOMERS and returns it with it's shiny new id
-
-    Args:
-        customer (dict): the customer item
-
-    Returns:
-        dict: the customer item with it's id in CUSTOMERS
-    """
+def post_single_customer(customer):  # pylint: disable=missing-docstring
     # Reverse index the CUSTOMERS to get the highest id
     max_id = CUSTOMERS[-1]["id"]
 
@@ -61,3 +43,13 @@ def post_single_customer(customer):
     customer["id"] = new_id
     CUSTOMERS.append(customer)
     return customer
+
+
+def delete_single_customer(id):  # pylint: disable=missing-docstring
+    customer_index = -1
+    for index, customer in enumerate(CUSTOMERS):
+        if customer["id"] == id:
+            customer_index = index
+
+    if customer_index >= 0:
+        CUSTOMERS.pop(customer_index)
