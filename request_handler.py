@@ -30,6 +30,10 @@ class Resources:
             return self.funcDict[resource]["get"]["all"]()
         return self.nothing()
 
+    def delete_single(self, resource, id):  # pylint: disable=missing-docstring
+        if resource in self.funcDict:
+            return self.funcDict[resource]["delete"]["single"](id)
+
     def post_item(self, resource, item):
         """Posts a given item to the given resource
 
@@ -52,6 +56,9 @@ class Resources:
             },
             "post": {
                 "single": post_single_animal
+            },
+            "delete": {
+                "single": delete_single_animal
             }
         },
         "employees": {
@@ -61,7 +68,11 @@ class Resources:
             },
             "post": {
                 "single": post_single_employee
+            },
+            "delete": {
+                "single": delete_single_employee
             }
+
         },
         "locations": {
             "get": {
@@ -70,7 +81,11 @@ class Resources:
             },
             "post": {
                 "single": post_single_location
+            },
+            "delete": {
+                "single": delete_single_location
             }
+
         },
         "customers": {
             "get": {
@@ -79,7 +94,11 @@ class Resources:
             },
             "post": {
                 "single": post_single_customer
+            },
+            "delete": {
+                "single": delete_single_customer
             }
+
         },
 
     }
@@ -180,9 +199,17 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(response.encode())
 
     def do_PUT(self):
-        """do_POST responds to an POST request from the client... by just doing a PUT
+        """do_POST responds to an POST request from the client... by just doing a POST
         """
         self.do_POST()
+
+    def do_DELETE(self):
+        self._set_headers(204)
+        (resource, id) = self.parse_url(self.path)
+        resources = Resources()
+        if resource in resources():
+            resources.delete_single(resource, id)
+        self.wfile.write("".encode())
 
 
 def main():

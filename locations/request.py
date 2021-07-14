@@ -59,7 +59,7 @@ def post_single_location(location):
 
 def delete_single_location(id):  # pylint: disable=missing-docstring
     locations_index = -1
-    for index, locations in enumerate(CUSTOMERS):
+    for index, locations in enumerate(LOCATIONS):
         if locations["id"] == id:
             locations_index = index
 

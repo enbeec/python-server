@@ -65,7 +65,7 @@ def post_single_animal(animal):
 
 def delete_single_animal(id):  # pylint: disable=missing-docstring
     animals_index = -1
-    for index, animals in enumerate(CUSTOMERS):
+    for index, animals in enumerate(ANIMALS):
         if animals["id"] == id:
             animals_index = index
 

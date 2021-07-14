@@ -59,7 +59,7 @@ def post_single_employee(employee):
 
 def delete_single_employee(id):  # pylint: disable=missing-docstring
     employees_index = -1
-    for index, employees in enumerate(CUSTOMERS):
+    for index, employees in enumerate(EMPLOYEES):
         if employees["id"] == id:
             employees_index = index
 
