@@ -1,24 +1,24 @@
-CUSTOMERS = [{
-    "id": 1,
-    "name": "Snickers",
-    "species": "Dog",
-    "locationId": 1,
-    "customerId": 4
-},
+CUSTOMERS = [
+    {
+        "id": 1,
+        "name": "Lemmy Bosco",
+        "Address": "123 Flower Street",
+    },
     {
         "id": 2,
-        "name": "Gypsy",
-        "species": "Dog",
-        "locationId": 1,
-        "customerId": 2
-},
+        "name": "Ramona Ramon",
+        "address": "456 Bombay Bay Lane"
+    },
     {
         "id": 3,
-        "name": "Blue",
-        "species": "Cat",
-        "locationId": 2,
-        "customerId": 1
-}
+        "name": "Chuck Pachinko",
+        "address": "789 Ursa Way Minor"
+    },
+    {
+        "id": 4,
+        "name": "Cecilia Cabron",
+        "address": "Space"
+    }
 ]
 
 
