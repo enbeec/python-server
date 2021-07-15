@@ -17,21 +17,11 @@ LOCATIONS = [
 ]
 
 
-def get_all_locations():
-    """Returns the entire LOCATIONS list as a json string.
-    """
+def get_all_locations():  # pylint: disable=missing-docstring
     return LOCATIONS
 
 
-def get_single_location(id):
-    """Finds a single location in LOCATIONS using an integer id and returns it as a json string
-
-    Args:
-            id (int): the integer id we are looking for in LOCATIONS
-
-    Returns:
-            dict: the requested location
-    """
+def get_single_location(id):  # pylint: disable=missing-docstring
     requested_location = None
     for location in LOCATIONS:
         if location["id"] == id:
@@ -39,15 +29,7 @@ def get_single_location(id):
     return requested_location
 
 
-def post_single_location(location):
-    """Takes a location, adds it to LOCATIONS and returns it with it's shiny new id
-
-    Args:
-        location (dict): the location item
-
-    Returns:
-        dict: the location item with it's id in LOCATIONS
-    """
+def post_single_location(location):  # pylint: disable=missing-docstring
     # Reverse index the LOCATIONS to get the highest id
     max_id = LOCATIONS[-1]["id"]
 

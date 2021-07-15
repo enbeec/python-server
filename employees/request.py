@@ -17,21 +17,11 @@ EMPLOYEES = [
 ]
 
 
-def get_all_employees():
-    """Returns the entire EMPLOYEES list as a json string.
-    """
+def get_all_employees():  # pylint: disable=missing-docstring
     return EMPLOYEES
 
 
-def get_single_employee(id):
-    """Finds a single employee in EMPLOYEES using an integer id and returns it as a json string
-
-    Args:
-            id (int): the integer id we are looking for in EMPLOYEES
-
-    Returns:
-            dict: the requested employee
-    """
+def get_single_employee(id):  # pylint: disable=missing-docstring
     requested_employee = None
     for employee in EMPLOYEES:
         if employee["id"] == id:
@@ -39,15 +29,7 @@ def get_single_employee(id):
     return requested_employee
 
 
-def post_single_employee(employee):
-    """Takes a employee, adds it to LOCATIONS and returns it with it's shiny new id
-
-    Args:
-        employee (dict): the employee item
-
-    Returns:
-        dict: the employee item with it's id in LOCATIONS
-    """
+def post_single_employee(employee):  # pylint: disable=missing-docstring
     # Reverse index the LOCATIONS to get the highest id
     max_id = EMPLOYEES[-1]["id"]
 

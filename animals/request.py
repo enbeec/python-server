@@ -22,21 +22,11 @@ ANIMALS = [{
 ]
 
 
-def get_all_animals():
-    """Returns the entire ANIMALS list as a json string.
-    """
+def get_all_animals():  # pylint: disable=missing-docstring
     return ANIMALS
 
 
-def get_single_animal(id):
-    """Finds a single animal in ANIMALS using an integer id and returns it as a json string.
-
-    Args:
-        id (int): the integer id we are looking for in ANIMALS
-
-    Returns:
-        dict: the requested animal
-    """
+def get_single_animal(id):  # pylint: disable=missing-docstring
     # init an empty variable
     requested_animal = None
     for animal in ANIMALS:
@@ -45,15 +35,7 @@ def get_single_animal(id):
     return requested_animal
 
 
-def post_single_animal(animal):
-    """Takes a animal, adds it to ANIMALS and returns it with it's shiny new id
-
-    Args:
-        animal (dict): the animal item
-
-    Returns:
-        dict: the animal item with it's id in ANIMALS
-    """
+def post_single_animal(animal):  # pylint: disable=missing-docstring
     # Reverse index the ANIMALS to get the highest id
     max_id = ANIMALS[-1]["id"]
 

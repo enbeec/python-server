@@ -1,9 +1,29 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from animals import get_all_animals, get_single_animal, post_single_animal, delete_single_animal
-from employees import get_all_employees, get_single_employee, post_single_employee, delete_single_employee
-from locations import get_all_locations, get_single_location, post_single_location, delete_single_location
-from customers import get_all_customers, get_single_customer, post_single_customer, delete_single_customer
+from animals import (
+    get_all_animals,
+    get_single_animal,
+    post_single_animal,
+    delete_single_animal
+)
+from employees import (
+    get_all_employees,
+    get_single_employee,
+    post_single_employee,
+    delete_single_employee
+)
+from locations import (
+    get_all_locations,
+    get_single_location,
+    post_single_location,
+    delete_single_location
+)
+from customers import (
+    get_all_customers,
+    get_single_customer,
+    post_single_customer,
+    delete_single_customer
+)
 
 
 class Resources:
@@ -203,7 +223,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         """
         self.do_POST()
 
-    def do_DELETE(self):
+    def do_DELETE(self):  # pylint: disable=missing-docstring
         self._set_headers(204)
         (resource, id) = self.parse_url(self.path)
         resources = Resources()
