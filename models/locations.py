@@ -3,5 +3,6 @@ from .things import Thing
 
 class Location(Thing):  # pylint: disable=missing-docstring
     def __init__(self, id, name, address):
-        super().__init__(id, name)
+        self.id = id
+        self.name = name
         self.address = address
