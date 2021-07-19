@@ -6,3 +6,7 @@ class Animal:  # pylint: disable=missing-docstring
         self.status = status
         self.location_id = location_id
         self.customer_id = customer_id
+
+    def select_keys(self):
+
+        return
