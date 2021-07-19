@@ -135,6 +135,8 @@ def main():
 if __name__ == "__main__":
     main()
 
+# THE CHOP SHOP --> say your goodbyes
+
 
 class Resources:  # BEING REPLACED BY QUERY
     """Wraps resource functions in a more easily callable way.
