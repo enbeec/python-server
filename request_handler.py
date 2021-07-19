@@ -3,26 +3,18 @@ import json
 from query import Query
 from models import classDict
 from animals import (
-    get_all_animals,
-    get_single_animal,
     post_single_animal,
     delete_single_animal
 )
 from employees import (
-    get_all_employees,
-    get_single_employee,
     post_single_employee,
     delete_single_employee
 )
 from locations import (
-    get_all_locations,
-    get_single_location,
     post_single_location,
     delete_single_location
 )
 from customers import (
-    get_all_customers,
-    get_single_customer,
     post_single_customer,
     delete_single_customer
 )
@@ -160,16 +152,6 @@ class Resources:
     def nothing(self):  # pylint: disable=missing-docstring
         return f'{[]}'
 
-    def get_single(self, resource, id):  # pylint: disable=missing-docstring
-        if resource in self.funcDict:
-            return self.funcDict[resource]["get"]["single"](id)
-        return self.nothing()
-
-    def get_all(self, resource):  # pylint: disable=missing-docstring
-        if resource in self.funcDict:
-            return self.funcDict[resource]["get"]["all"]()
-        return self.nothing()
-
     def delete_single(self, resource, id):  # pylint: disable=missing-docstring
         if resource in self.funcDict:
             return self.funcDict[resource]["delete"]["single"](id)
@@ -190,55 +172,20 @@ class Resources:
 
     funcDict = {
         "animals": {
-            "get": {
-                "single": get_single_animal,
-                "all": get_all_animals
-            },
-            "post": {
-                "single": post_single_animal
-            },
-            "delete": {
-                "single": delete_single_animal
-            }
+            "post": {"single": post_single_animal},
+            "delete": {"single": delete_single_animal}
         },
         "employees": {
-            "get": {
-                "single": get_single_employee,
-                "all": get_all_employees
-            },
-            "post": {
-                "single": post_single_employee
-            },
-            "delete": {
-                "single": delete_single_employee
-            }
-
+            "post": {"single": post_single_employee},
+            "delete": {"single": delete_single_employee}
         },
         "locations": {
-            "get": {
-                "single": get_single_location,
-                "all": get_all_locations
-            },
-            "post": {
-                "single": post_single_location
-            },
-            "delete": {
-                "single": delete_single_location
-            }
-
+            "post": {"single": post_single_location},
+            "delete": {"single": delete_single_location}
         },
         "customers": {
-            "get": {
-                "single": get_single_customer,
-                "all": get_all_customers
-            },
-            "post": {
-                "single": post_single_customer
-            },
-            "delete": {
-                "single": delete_single_customer
-            }
-
+            "post": {"single": post_single_customer},
+            "delete": {"single": delete_single_customer}
         },
 
     }
