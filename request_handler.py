@@ -219,8 +219,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(response.encode())
 
     def do_PUT(self):
-        """do_POST responds to an POST request from the client... by just doing a POST
-        """
+        """do_PUT responds to an POST request from the client... by just doing a POST
+            """
         self.do_POST()
 
     def do_DELETE(self):  # pylint: disable=missing-docstring
