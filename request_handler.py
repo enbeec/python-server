@@ -135,10 +135,8 @@ def main():
 if __name__ == "__main__":
     main()
 
-# BEING REPLACE BY QUERY
 
-
-class Resources:
+class Resources:  # BEING REPLACED BY QUERY
     """Wraps resource functions in a more easily callable way.
         """
 
