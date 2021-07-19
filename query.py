@@ -9,14 +9,17 @@ class Query:
         """
 
     def __init__(self, classDict, db_file):
-        # TODO make this a property
-        self.db_file = db_file
+        self.__db_file = db_file
         self.resources = classDict
+
+    @property
+    def db_file(self):  # pylint: disable=missing-docstring
+        return self.__db_file
 
     def classes(self):  # pylint: disable=missing-docstring
         return self.resources.keys()
 
-    def get(self, resource, id=None):
+    def get(self, resource, id=None, params=None):
         """gets a given resource. If provided an id, response will be a single result
             Args:
                 resource (string): the name of the resource
@@ -33,7 +36,7 @@ class Query:
                 conn.row_factory = sqlite3.Row
                 db_cursor = conn.cursor()
 
-                # handle getting single item
+                # HANDLE GETTING SINGLE ITEM
                 if id is not None:
                     query += f""" WHERE {resource.rstrip("s")}.id = ?"""
                     db_cursor.execute(query, (id,))
@@ -41,10 +44,16 @@ class Query:
                     init_args = {}
                     for column in required_columns:
                         init_args[column] = dataset[column]
+                    result = [resource_class(**init_args).__dict__]
                     # get() always returns a list
-                    return [resource_class(**init_args).__dict__]
+                    return result
+                elif params is not None:
+                    # parse params into query
+                    # exec the query
+                    # process results and return
+                    pass
 
-                # handle getting all items
+                # HANDLE GETTING ALL ITEMS
                 db_cursor.execute(query)
                 dataset = db_cursor.fetchall()
                 results = []
