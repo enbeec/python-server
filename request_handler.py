@@ -32,6 +32,7 @@ kennelQuery = Query(classDict, "./kennel.db")
 
 class HandleRequests(BaseHTTPRequestHandler):
     """HandleRequest is a custom HTTP request handler
+            All JSON <--> Python dict conversion happens inside here.
         """
 
     def parse_url(self, path):
@@ -86,24 +87,19 @@ class HandleRequests(BaseHTTPRequestHandler):
             """
         # Set the response code to 'Ok'
         self._set_headers(200)
+
         # default response is an empty dict
         response = {}
-        # ooh! tuple destructuring :)
-        (resource, id) = self.parse_url(self.path)
 
+        (resource, id) = self.parse_url(self.path)
         if resource in kennelQuery.classes():
-            if id is not None:
-                response = kennelQuery.get(resource, id)
-            else:
-                response = kennelQuery.get(resource)
+            response = kennelQuery.get(resource, id)
 
         response = f"{json.dumps(response)}"
         self.wfile.write(response.encode())
 
     def do_POST(self):
         """do_POST responds to an POST request from the client.
-
-            All JSON <--> Python dict conversion happens inside here.
             """
         # Set response code to 'Created'
         self._set_headers(201)

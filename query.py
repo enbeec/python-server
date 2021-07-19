@@ -17,47 +17,50 @@ class Query:
         return self.resources.keys()
 
     def get(self, resource, id=None):
-        """gets all of a given resource
+        """gets a given resource. If provided an id, response will be a single result
             Args:
                 resource (string): the name of the resource
 
             Returns:
-                list: the items of said resource
+                list: the item(s) of said resource inside a list
             """
-        if resource not in self.resources.keys():
+        if resource not in self.classes():
             pass  # or throw an error
         else:
-            (query, required_columns) = self.build_query(resource, id)
+            (query, required_columns) = self.build_query(resource)
             resource_class = self.resources[resource]
             with sqlite3.connect(self.db_file) as conn:
                 conn.row_factory = sqlite3.Row
                 db_cursor = conn.cursor()
 
+                # handle getting single item
                 if id is not None:
-                    db_cursor.execute(*query)
+                    query += f""" WHERE {resource.rstrip("s")}.id = ?"""
+                    db_cursor.execute(query, (id,))
                     dataset = db_cursor.fetchone()
-                    # store arguments for __init__ in a dict
                     init_args = {}
                     for column in required_columns:
                         init_args[column] = dataset[column]
+                    # get() always returns a list
+                    return [resource_class(**init_args).__dict__]
+
+                # handle getting all items
+                db_cursor.execute(query)
+                dataset = db_cursor.fetchall()
+                results = []
+
+                # create a class instance for each row
+                for row in dataset:
+                    # store arguments for __init__ in a dict
+                    init_args = {}
+                    for column in required_columns:
+                        init_args[column] = row[column]
                     # unpack dict into args
-                    return resource_class(**init_args).__dict__
-                else:
-                    db_cursor.execute(query)
-                    dataset = db_cursor.fetchall()
-                    results = []
+                    results.append(resource_class(**init_args).__dict__)
 
-                    for row in dataset:
-                        # store arguments for __init__ in a dict
-                        init_args = {}
-                        for column in required_columns:
-                            init_args[column] = row[column]
-                        # unpack dict into args
-                        results.append(resource_class(**init_args).__dict__)
+                return results
 
-                    return results
-
-    def build_query(self, resource, id=None):
+    def build_query(self, resource):
         """Looks at the arguments required to init a given resource and returns
                 both a query for those arguments and a list containing those arguments
 
@@ -78,8 +81,4 @@ class Query:
                 query += ", "
         query += f" FROM {table_name}"
 
-        if id is not None:
-            query += f"WHERE {table_name}.id = ?"
-            return ((query, id), init_args)
-        else:
-            return (query, init_args)
+        return (query, init_args)
