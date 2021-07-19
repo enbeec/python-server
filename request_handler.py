@@ -1,111 +1,30 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from animals import get_all_animals, get_single_animal, post_single_animal, delete_single_animal
-from employees import get_all_employees, get_single_employee, post_single_employee, delete_single_employee
-from locations import get_all_locations, get_single_location, post_single_location, delete_single_location
-from customers import get_all_customers, get_single_customer, post_single_customer, delete_single_customer
+from query import Query
+from models import classDict
+from animals import (
+    post_single_animal,
+    delete_single_animal
+)
+from employees import (
+    post_single_employee,
+    delete_single_employee
+)
+from locations import (
+    post_single_location,
+    delete_single_location
+)
+from customers import (
+    post_single_customer,
+    delete_single_customer
+)
 
-
-class Resources:
-    """Wraps resource functions in a more easily callable way.
-        """
-
-    def __call__(self):
-        """Returns a list of available resources.
-
-            The __call__ method is called when you add () after an instance of Resources
-            """
-        return self.funcDict.keys()
-
-    def nothing(self):  # pylint: disable=missing-docstring
-        return f'{[]}'
-
-    def get_single(self, resource, id):  # pylint: disable=missing-docstring
-        if resource in self.funcDict:
-            return self.funcDict[resource]["get"]["single"](id)
-        return self.nothing()
-
-    def get_all(self, resource):  # pylint: disable=missing-docstring
-        if resource in self.funcDict:
-            return self.funcDict[resource]["get"]["all"]()
-        return self.nothing()
-
-    def delete_single(self, resource, id):  # pylint: disable=missing-docstring
-        if resource in self.funcDict:
-            return self.funcDict[resource]["delete"]["single"](id)
-
-    def post_item(self, resource, item):
-        """Posts a given item to the given resource
-
-        Args:
-            resource (string): the name of the resource
-            item (dict): the item to be posted
-
-        Returns:
-            dict: the item with its shiny new id
-        """
-        if resource in self.funcDict:
-            return self.funcDict[resource]["post"]["single"](item)
-        return self.nothing()
-
-    funcDict = {
-        "animals": {
-            "get": {
-                "single": get_single_animal,
-                "all": get_all_animals
-            },
-            "post": {
-                "single": post_single_animal
-            },
-            "delete": {
-                "single": delete_single_animal
-            }
-        },
-        "employees": {
-            "get": {
-                "single": get_single_employee,
-                "all": get_all_employees
-            },
-            "post": {
-                "single": post_single_employee
-            },
-            "delete": {
-                "single": delete_single_employee
-            }
-
-        },
-        "locations": {
-            "get": {
-                "single": get_single_location,
-                "all": get_all_locations
-            },
-            "post": {
-                "single": post_single_location
-            },
-            "delete": {
-                "single": delete_single_location
-            }
-
-        },
-        "customers": {
-            "get": {
-                "single": get_single_customer,
-                "all": get_all_customers
-            },
-            "post": {
-                "single": post_single_customer
-            },
-            "delete": {
-                "single": delete_single_customer
-            }
-
-        },
-
-    }
+kennelQuery = Query(classDict, "./kennel.db")
 
 
 class HandleRequests(BaseHTTPRequestHandler):
     """HandleRequest is a custom HTTP request handler
+            All JSON <--> Python dict conversion happens inside here.
         """
 
     def parse_url(self, path):
@@ -160,26 +79,19 @@ class HandleRequests(BaseHTTPRequestHandler):
             """
         # Set the response code to 'Ok'
         self._set_headers(200)
+
         # default response is an empty dict
         response = {}
-        # ooh! tuple destructuring :)
+
         (resource, id) = self.parse_url(self.path)
-
-        resources = Resources()
-
-        if resource in resources():
-            if id is not None:
-                response = resources.get_single(resource, id)
-            else:
-                response = resources.get_all(resource)
+        if resource in kennelQuery.classes():
+            response = kennelQuery.get(resource, id)
 
         response = f"{json.dumps(response)}"
         self.wfile.write(response.encode())
 
     def do_POST(self):
         """do_POST responds to an POST request from the client.
-
-            All JSON <--> Python dict conversion happens inside here.
             """
         # Set response code to 'Created'
         self._set_headers(201)
@@ -199,11 +111,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(response.encode())
 
     def do_PUT(self):
-        """do_POST responds to an POST request from the client... by just doing a POST
-        """
+        """do_PUT responds to an POST request from the client... by just doing a POST
+            """
         self.do_POST()
 
-    def do_DELETE(self):
+    def do_DELETE(self):  # pylint: disable=missing-docstring
         self._set_headers(204)
         (resource, id) = self.parse_url(self.path)
         resources = Resources()
@@ -222,3 +134,58 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# THE CHOP SHOP --> say your goodbyes
+
+
+class Resources:  # BEING REPLACED BY QUERY
+    """Wraps resource functions in a more easily callable way.
+        """
+
+    def __call__(self):
+        """Returns a list of available resources.
+
+            The __call__ method is called when you add () after an instance of Resources
+            """
+        return self.funcDict.keys()
+
+    def nothing(self):  # pylint: disable=missing-docstring
+        return f'{[]}'
+
+    def delete_single(self, resource, id):  # pylint: disable=missing-docstring
+        if resource in self.funcDict:
+            return self.funcDict[resource]["delete"]["single"](id)
+
+    def post_item(self, resource, item):
+        """Posts a given item to the given resource
+
+        Args:
+            resource (string): the name of the resource
+            item (dict): the item to be posted
+
+        Returns:
+            dict: the item with its shiny new id
+        """
+        if resource in self.funcDict:
+            return self.funcDict[resource]["post"]["single"](item)
+        return self.nothing()
+
+    funcDict = {
+        "animals": {
+            "post": {"single": post_single_animal},
+            "delete": {"single": delete_single_animal}
+        },
+        "employees": {
+            "post": {"single": post_single_employee},
+            "delete": {"single": delete_single_employee}
+        },
+        "locations": {
+            "post": {"single": post_single_location},
+            "delete": {"single": delete_single_location}
+        },
+        "customers": {
+            "post": {"single": post_single_customer},
+            "delete": {"single": delete_single_customer}
+        },
+
+    }
