@@ -1,55 +1,85 @@
-ANIMALS = [{
-    "id": 1,
-    "name": "Snickers",
-    "species": "Dog",
-    "locationId": 1,
-    "customerId": 4
-},
-    {
-        "id": 2,
-        "name": "Gypsy",
-        "species": "Dog",
-        "locationId": 1,
-        "customerId": 2
-},
-    {
-        "id": 3,
-        "name": "Blue",
-        "species": "Cat",
-        "locationId": 2,
-        "customerId": 1
-}
-]
+from models.animals import Animal
+import sqlite3
+from database import DB_FILE
 
 
 def get_all_animals():  # pylint: disable=missing-docstring
-    return ANIMALS
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+            SELECT
+                a.id,
+                a.name,
+                a.breed,
+                a.status,
+                a.location_id,
+                a.customer_id
+            FROM animal a
+        """)
+        animals = []
+        dataset = db_cursor.fetchall()
+        for row in dataset:
+            animal = Animal(row['id'],
+                            row['name'],
+                            row['breed'],
+                            row['status'],
+                            row['location_id'],
+                            row['customer_id'])
+            animals.append(animal.__dict__)
+        return animals
 
 
 def get_single_animal(id):  # pylint: disable=missing-docstring
-    # init an empty variable
-    requested_animal = None
-    for animal in ANIMALS:
-        if animal["id"] == id:
-            requested_animal = animal
-    return requested_animal
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+            SELECT
+                a.id,
+                a.name,
+                a.breed,
+                a.status,
+                a.location_id,
+                a.customer_id
+            FROM animal a
+            WHERE id = ?
+        """, (id,))
+        animal = None
+        dataset = db_cursor.fetchone()
+        animal = Animal(
+            dataset['id'],
+            dataset['name'],
+            dataset['breed'],
+            dataset['status'],
+            dataset['location_id'],
+            dataset['customer_id']
+        )
+        return animal
 
 
 def post_single_animal(animal):  # pylint: disable=missing-docstring
-    # Reverse index the ANIMALS to get the highest id
-    max_id = ANIMALS[-1]["id"]
+    with sqlite3.connect(DB_FILE) as conn:
+        db_cursor = conn.cursor()
 
-    new_id = max_id + 1
-    animal["id"] = new_id
-    ANIMALS.append(animal)
-    return animal
+        db_cursor.execute("""
+            INSERT INTO Animal
+                ( name, breed, status, location_id, customer_id )
+            VALUES
+                ( ?, ?, ?, ?, ?);
+        """, (
+            animal['name'],
+            animal['breed'],
+            animal['status'],
+            animal['location_id'],
+            animal['customer_id']
+        ))
 
 
 def delete_single_animal(id):  # pylint: disable=missing-docstring
-    animals_index = -1
-    for index, animals in enumerate(ANIMALS):
-        if animals["id"] == id:
-            animals_index = index
-
-    if animals_index >= 0:
-        ANIMALS.pop(animals_index)
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+                DELETE FROM animal
+                WHERE id = ?
+            """, (id, ))
